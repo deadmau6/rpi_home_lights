@@ -50,8 +50,7 @@ class Manager:
         while True:
             try:
                 # This watches the currently active events for updates.
-                readable, writable, errors = select.select(
-                    self.dispatch_pipes, self.event_pipes, self.event_pipes, 0.001)
+                readable, writable, errors = select.select(self.dispatch_pipes, self.event_pipes, self.event_pipes, 0.001)
                 for conn in readable:
                     self.read_event(conn)
             except (KeyboardInterrupt, SystemExit):
@@ -118,6 +117,19 @@ class Manager:
             self.close_pipe(conn.fileno())
         else:
             self.handle_update(conn.fileno(), update_obj)
+
+    def write_event(self, event_id, obj):
+        """Writes the Object data to the event given the event id."""
+        if event_id in self.active_events.keys():
+            parent_conn = self.active_events[event_id][0]
+            try:
+                parent_conn.send(obj)
+            except ValueError:
+                print('Error: object to large could not be sent.')
+            except Exception as e:
+                print(e)
+        else:
+            print("Error: Event not found!")
 
     def cancel_event(self, event_id):
         """Sends a cancel message to the child event."""

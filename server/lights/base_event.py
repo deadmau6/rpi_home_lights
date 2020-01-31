@@ -1,13 +1,3 @@
-from enum import Enum
-import select
-
-class Signal(Enum):
-    ABORT = 'abort'
-    ABORTED = 'aborted'
-    COMPLETED = 'completed'
-    ERROR = 'error'
-    FAILURE = 'failure'
-    SUCCESS = 'success'
 
 class BaseEvent:
     """The BaseEvent class
@@ -31,9 +21,11 @@ class BaseEvent:
         self.event_conn.send(conclusion)
         self.event_conn.close()
 
-    def is_cancelled(self):
-        """This checks the pipe to see if the manager has sent a message to the event."""
-        if not self._is_cancelled:
-            self._is_cancelled = self.event_conn.poll() and self.event_conn.recv() == Signal.ABORT
-        return self._is_cancelled
-
+    def check_manager(self, timeout=0.1):
+        if self.event_conn.poll(timeout):
+            try:
+                update_obj = self.event_conn.recv()
+            except (EOFError, OSError) as e:
+                return { status: 'error', message: e.message }
+            return update_obj
+        return None
