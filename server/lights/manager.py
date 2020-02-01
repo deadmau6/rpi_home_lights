@@ -29,7 +29,7 @@ class Manager:
         (ie start, pause, or stop an event)
         """
         if request_obj.get('cancel'):
-            print(f"Cancel request recieved for {request_obj['id']}")
+            print("Cancel request recieved for {0}".format(request_obj['id']))
             self.cancel_event(request_obj['id'])
         else:
             self.start_event(request_obj)
@@ -40,10 +40,10 @@ class Manager:
         It should be noted that this function is intended to be a global interpreter for all events.
         """
         if update_obj.get('status') == 'DONE':
-            print(f"{update_obj['name']}:{update_obj['id']}({update_obj['status']}) - {update_obj['update']}")
+            print(f"{0}:{1}({2}) - {3}".format(update_obj['name'], update_obj['id'], update_obj['status'], update_obj['update']))
             self.close_event(pipe_fileno)
         else:
-            print(f"{update_obj['name']}:{update_obj['id']}({update_obj['status']}) - {update_obj['update']}")
+            print(f"{0}:{1}({2}) - {3}".format(update_obj['name'], update_obj['id'], update_obj['status'], update_obj['update']))
 
     def monitor(self):
         # def _monitor():
@@ -60,8 +60,8 @@ class Manager:
                 print('\nComplete!')
                 return
             except Exception as e:
-                print(f'\nError: {e}')
-                print('Exiting...')
+                print('\nExiting...')
+                print(e)
                 for pipe_fileno in self.active_pipes.keys():
                     self.close_event(pipe_fileno)
                 print('\nComplete!')
@@ -106,7 +106,7 @@ class Manager:
             # Create an association to the event id and all of it's connections/process objects.
             self.active_events[event_id] = (parent_conn, child_conn, event)
             # Log or print out the event created.
-            print(f'Event PID: {event.pid}')
+            print('Event PID: {0}'.format(event.pid))
 
     def read_event(self, conn):
         """Reads data sent from the spawned event through its pipe."""
