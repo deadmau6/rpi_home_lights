@@ -1,6 +1,6 @@
 from multiprocessing import Process
-from .base_event import BaseEvent
-from .lights_controller import LightsController
+from base_event import BaseEvent
+from lights_controller import LightsController
 import time
 
 class LightEvent(BaseEvent, Process):
