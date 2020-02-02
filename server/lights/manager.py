@@ -1,5 +1,5 @@
 from multiprocessing import Process, Pipe
-from .light_event import LightEvent
+from light_event import LightEvent
 import select, json, time
 #TODO: Add logging.
 
@@ -40,33 +40,33 @@ class Manager:
         It should be noted that this function is intended to be a global interpreter for all events.
         """
         if update_obj.get('status') == 'DONE':
-            print(f"{0}:{1}({2}) - {3}".format(update_obj['name'], update_obj['id'], update_obj['status'], update_obj['update']))
+            print("{0}:{1}({2}) - {3}".format(update_obj['name'], update_obj['id'], update_obj['status'], update_obj['update']))
             self.close_event(pipe_fileno)
         else:
-            print(f"{0}:{1}({2}) - {3}".format(update_obj['name'], update_obj['id'], update_obj['status'], update_obj['update']))
+            print("{0}:{1}({2}) - {3}".format(update_obj['name'], update_obj['id'], update_obj['status'], update_obj['update']))
 
     def monitor(self):
         # def _monitor():
-        while True:
-            try:
-                # This watches the currently active events for updates.
-                readable, writable, errors = select.select(self.dispatch_pipes, self.event_pipes, self.event_pipes, 0.001)
-                for conn in readable:
-                    self.read_event(conn)
-            except (KeyboardInterrupt, SystemExit):
-                print('\nExiting...')
-                for pipe_fileno in self.active_pipes.keys():
-                    self.close_event(pipe_fileno)
-                print('\nComplete!')
-                return
-            except Exception as e:
-                print('\nExiting...')
-                print(e)
-                for pipe_fileno in self.active_pipes.keys():
-                    self.close_event(pipe_fileno)
-                print('\nComplete!')
-                return
-            time.sleep(0.001)
+        #while True:
+        try:
+            # This watches the currently active events for updates.
+            readable, writable, errors = select.select(self.dispatch_pipes, self.event_pipes, self.event_pipes, 0.001)
+            for conn in readable:
+                self.read_event(conn)
+        except (KeyboardInterrupt, SystemExit):
+            print('\nExiting...')
+            for pipe_fileno in self.active_pipes.keys():
+                self.close_event(pipe_fileno)
+            print('\nComplete!')
+            return
+        except Exception as e:
+            print('\nExiting...')
+            print(e)
+            for pipe_fileno in self.active_pipes.keys():
+                self.close_event(pipe_fileno)
+            print('\nComplete!')
+            return
+        # time.sleep(0.001)
         # self.monitor_thread = Thread(target=_monitor, name=f"{self.__class__.__name__} manager monitor")
         # self.monitor_thread.setDaemon(True)
         # self.monitor_thread.start()
@@ -80,13 +80,7 @@ class Manager:
 
         Returns the specified Event Instance (ie Searcher)
         """
-        typ = event_obj['type'].lower()
-        if typ == 'compress':
-            return CompressMessage(conn, event_obj)
-        elif typ =='yell':
-            return YellMessage(conn, event_obj)
-        else:
-            return ReverseMessage(conn, event_obj)
+        return LightEvent(conn, event_obj)
 
     def start_event(self, event_obj):
         """Starts the event."""
