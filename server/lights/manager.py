@@ -21,20 +21,7 @@ class Manager:
         # TODO: boken pipes should contain both pipes and is only used for catching errors.
         self.broken_pipes = []
 
-    def handle_request(self, request_obj):
-        """This function accepts a dictionary object.
-
-        The purpose of this function is to parse any necessary portions
-        of the request that applies to actions of an event.
-        (ie start, pause, or stop an event)
-        """
-        if request_obj.get('cancel'):
-            print("Cancel request recieved for {0}".format(request_obj['id']))
-            self.cancel_event(request_obj['id'])
-        else:
-            self.start_event(request_obj)
-
-    def handle_update(self, pipe_fileno, update_obj):
+    def update_event(self, pipe_fileno, update_obj):
         """This function parses the event's update request and can act accordingly.
 
         It should be noted that this function is intended to be a global interpreter for all events.
@@ -110,7 +97,7 @@ class Manager:
             print("Cannot Read Event, it must've abruptly close.", ef)
             self.close_pipe(conn.fileno())
         else:
-            self.handle_update(conn.fileno(), update_obj)
+            self.update_event(conn.fileno(), update_obj)
 
     def write_event(self, event_id, obj):
         """Writes the Object data to the event given the event id."""
