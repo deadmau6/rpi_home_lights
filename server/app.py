@@ -1,13 +1,17 @@
 from flask import Flask
+from flask_socketio import SocketIO
+
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'pi_boi'
+socketio = SocketIO(app, message_queue='redis://')
 
-@app.route('/')
-def index():
-	return '<h1>Hello World</h1>'
+@socketio.on('lights')
+def handle_lights(json):
+	emit(json, broadcast=True)
 
-@app.route('/user/<name>')
-def user(name):
-	return '<h1>Hello, %s!</h1>' % name
+@socketio.on('status')
+def current_status(json):
+	emit(json, broadcast=True)
 
 if __name__ == '__main__':
-	app.run(debug=True)
+	socketio.run(app)
