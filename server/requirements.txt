@@ -2,3 +2,4 @@ Flask
 adafruit-circuitpython-neopixel
 cerberus
 flask-socketio
+redis
