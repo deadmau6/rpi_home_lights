@@ -4,10 +4,13 @@ eventlet.monkey_patch()
 from flask import Flask
 from flask_socketio import SocketIO, emit
 
-
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'pi_boi'
-socketio = SocketIO(app, cors_allowed_origins='*', message_queue='redis://')
+socketio = SocketIO(app, cors_allowed_origins='*', message_queue='redis://', channel="lights-request")
+
+def handle_channel(message):
+    emit('status', message['data'], broadcast=True)
+
 
 @socketio.on('lights')
 def handle_lights(json):
