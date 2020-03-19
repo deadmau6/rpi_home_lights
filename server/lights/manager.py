@@ -1,9 +1,9 @@
 from multiprocessing import Process, Pipe
+from abc import ABC, abstractmethod
 from light_event import LightEvent
 import select, json, time
-#TODO: Add logging.
 
-class Manager:
+class Manager(ABC):
     """The Manager class
 
     This class is an event driven process manager.
@@ -21,20 +21,11 @@ class Manager:
         # TODO: boken pipes should contain both pipes and is only used for catching errors.
         self.broken_pipes = []
 
-    def update_event(self, pipe_fileno, update_obj):
-        """This function parses the event's update request and can act accordingly.
-
-        It should be noted that this function is intended to be a global interpreter for all events.
-        """
-        if update_obj.get('status') == 'DONE':
-            print("{0}:{1}({2}) - {3}".format(update_obj['name'], update_obj['id'], update_obj['status'], update_obj['update']))
-            self.close_event(pipe_fileno)
-        else:
-            print("{0}:{1}({2}) - {3}".format(update_obj['name'], update_obj['id'], update_obj['status'], update_obj['update']))
+    @abstractmethod
+    def update_event(self, data, pipe_fileno):
+        pass
 
     def monitor(self):
-        # def _monitor():
-        #while True:
         try:
             # This watches the currently active events for updates.
             readable, writable, errors = select.select(self.dispatch_pipes, self.event_pipes, self.event_pipes, 0.001)
@@ -45,18 +36,12 @@ class Manager:
             for pipe_fileno in self.active_pipes.keys():
                 self.close_event(pipe_fileno)
             print('\nComplete!')
-            return
         except Exception as e:
             print('\nExiting...')
             print(e)
             for pipe_fileno in self.active_pipes.keys():
                 self.close_event(pipe_fileno)
             print('\nComplete!')
-            return
-        # time.sleep(0.001)
-        # self.monitor_thread = Thread(target=_monitor, name=f"{self.__class__.__name__} manager monitor")
-        # self.monitor_thread.setDaemon(True)
-        # self.monitor_thread.start()
 
     def register_event(self, conn, event_obj):
         """Registers a particular event based on the typ.
@@ -97,14 +82,14 @@ class Manager:
             print("Cannot Read Event, it must've abruptly close.", ef)
             self.close_pipe(conn.fileno())
         else:
-            self.update_event(conn.fileno(), update_obj)
+            self.update_event(update_obj, conn.fileno())
 
-    def write_event(self, event_id, obj):
+    def write_event(self, data, event_id):
         """Writes the Object data to the event given the event id."""
         if event_id in self.active_events.keys():
             parent_conn = self.active_events[event_id][0]
             try:
-                parent_conn.send(obj)
+                parent_conn.send(data)
             except ValueError:
                 print('Error: object to large could not be sent.')
             except Exception as e:
