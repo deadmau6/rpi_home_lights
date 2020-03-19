@@ -26,11 +26,11 @@ print("Started Event: {0}".format({ 'id': current_ID, 'status': 'running', 'mode
 def handle_lights(json):
     packet = pickle.loads(json['data'])
     if packet['event'] == 'manager':
-    	lights.write_event(packet['data'], current_ID)
+        lights.write_event(packet['data'], current_ID)
 
 if __name__ == "__main__":
-	freeze_support()
-	r = redis.Redis(host='localhost', port=6379, db=0)
+    freeze_support()
+    r = redis.Redis(host='localhost', port=6379, db=0)
     p = r.pubsub()
     p.subscribe(**{'client': handle_lights})
     p.get_message()
