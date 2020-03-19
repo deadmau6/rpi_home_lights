@@ -1,7 +1,7 @@
 from multiprocessing import Process
 from base_event import BaseEvent
 from lights_controller import LightsController
-import time
+from time import sleep
 
 class LightEvent(BaseEvent, Process):
 
@@ -11,7 +11,7 @@ class LightEvent(BaseEvent, Process):
         self.event_id = event_obj['id']
         self.lights = LightsController(event_obj)
 
-    def log(self, update_msg, status="OK"):
+    def log(self, update, status="OK"):
         self.report({
                 'id': self.event_id,
                 'update': update,
@@ -32,10 +32,12 @@ class LightEvent(BaseEvent, Process):
                 if request.get('status') == 'error':
                     self.done(request.get('message'), 'ERROR')
                     break
-                if request.get('status') == 'shutdown':
+                elif request.get('status') == 'shutdown':
                     self.done('Safely shutting down.')
                     break
-                self.lights.update(request)
+                else:
+                    update_obj = self.lights.update(request)
+                    self.log(update_obj)
             self.lights.run()
-            time.sleep(1)
+            sleep(1)
 

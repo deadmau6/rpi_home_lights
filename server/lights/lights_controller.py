@@ -1,18 +1,13 @@
+from .mode_validators import ModeValidators
+from time import sleep
 import board
 import neopixel
-import time
-
-class Modes:
-	"""
-	Singleton style class that keeps track of Modes and their respective parameters.
-	"""
-	SINGLE = {}
-	RAINBOW = {}
 
 class LightsController:
 	def __init__(self, request):
 		# Basic setup
 		self.MODES = ['SINGLE', 'RAINBOW']
+		self.validators = ModeValidators()
 		self.pixel_pin = board.D18
 		self.num_pixels = 60
 		self.ORDER = neopixel.GRB
@@ -20,16 +15,20 @@ class LightsController:
 		# Default light mode.
 		self._mode = request.get('mode', 'SINGLE')
 		self._params = request.get('mode_params', {})
-		self.sleep = 1
 
 	def update(self, request):
 		mode = request.get('mode')
 		if mode and mode in self.MODES:
 			self._mode = mode
-		# TODO: Validate Params here!
+		# Validate params based on current mode.
 		mode_params = request.get('mode_params')
 		if mode_params:
-			self._params = mode_params
+			validator = self.validators(self._mode)
+			validator.validate(mode_params)
+			if validator.errors:
+				return validator.errors
+			self._params = validator.document
+		return {'mode': self._mode, 'params': self._params}
 
 	def run(self):
 		if self._mode == 'RAINBOW':
@@ -66,4 +65,4 @@ class LightsController:
 				pixel_index = (i * 256 // num_pixels) + j
 				self.pixels[i] = self._wheel(pixel_index & 255)
 			self.pixels.show()
-			time.sleep(wait)
+			sleep(wait)
