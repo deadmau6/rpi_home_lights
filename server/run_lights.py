@@ -21,6 +21,8 @@ lights = LightsManager()
 
 lights.start_event({ 'id': current_ID, 'status': 'running', 'mode': 'SINGLE' })
 
+shutdown_event = {'id': current_ID, 'status': 'shutdown'}
+
 print("Started Event: {0}".format({ 'id': current_ID, 'status': 'running', 'mode': 'SINGLE' }))
 
 def handle_lights(json):
@@ -40,10 +42,13 @@ if __name__ == "__main__":
             lights.monitor()
             sleep(0.01)
         except KeyboardInterrupt:
-            print('\nClosing Chat')
+            print('\nClosing...')
+            lights.write_event(shutdown_event)
             break
         except Exception as e:
             print("\nClosing from error: {0}".format(e))
+            lights.write_event(shutdown_event)
             break
     p.unsubscribe()
     p.close()
+    print("Lights Off.")
