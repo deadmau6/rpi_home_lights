@@ -7,7 +7,10 @@ class LightsController:
     def __init__(self, request):
         # Basic setup
         self.MODES = ['SINGLE', 'RAINBOW']
-        self.validators = ModeValidators()
+        self.validators = {
+                    'SINGLE': ModeValidators().SINGLE,
+                    'RAINBOW': ModeValidators().RAINBOW
+                }
         self.pixel_pin = board.D18
         self.num_pixels = 60
         self.ORDER = neopixel.GRB
@@ -23,7 +26,7 @@ class LightsController:
         # Validate params based on current mode.
         mode_params = request.get('mode_params')
         if mode_params:
-            validator = self.validators(self._mode)
+            validator = self.validators[self._mode]
             validator.validate(mode_params)
             if validator.errors:
                 return validator.errors
@@ -58,6 +61,7 @@ class LightsController:
 
     def _single(self, red=0, green=0, blue=0):
         self.pixels.fill((red, green, blue))
+        self.pixels.show()
 
     def _rainbow(self, wait=0.001):
         for j in range(255):
@@ -66,3 +70,4 @@ class LightsController:
                 self.pixels[i] = self._wheel(pixel_index & 255)
             self.pixels.show()
             sleep(wait)
+        self.pixels.show()
