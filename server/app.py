@@ -6,15 +6,11 @@ from flask_socketio import SocketIO, emit
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'pi_boi'
-socketio = SocketIO(app, cors_allowed_origins='*', message_queue='redis://', channel="lights-request")
-
-def handle_channel(message):
-    emit('status', message['data'], broadcast=True)
-
+socketio = SocketIO(app, cors_allowed_origins='*', message_queue='redis://', channel="client")
 
 @socketio.on('lights')
 def handle_lights(json):
-	emit('status', json, broadcast=True)
+	emit('manager', json, broadcast=True)
 
 if __name__ == '__main__':
 	socketio.run(app, debug=True, host='0.0.0.0', port=4000)
