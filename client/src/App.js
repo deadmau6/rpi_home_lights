@@ -1,16 +1,13 @@
 import React from 'react'
-import logo from './logo.svg';
-import './App.css';
-import Controller from './Controller';
+import logo from './logo.svg'
+import Controller from './Controller'
+import './App.css'
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        Check it out!
-        <Controller/>
-      </header>
-    </div>
-  );
+    return (
+        <div className="App">
+            <Controller />
+        </div>
+    )
 }
-export default App;
+export default App
