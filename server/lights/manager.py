@@ -109,7 +109,8 @@ class Manager(ABC):
 
     def close(self):
         """Safely close the entire manager and its children."""
-        for pipe_fileno in self.active_pipes.keys():
+        active_keys = list(self.active_pipes.keys())
+        for pipe_fileno in active_keys:
                 self.close_event(pipe_fileno)
 
     def close_event(self, pipe_fileno):
