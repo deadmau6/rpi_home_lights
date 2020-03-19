@@ -10,14 +10,22 @@ export default class Controller extends Component {
 			messages: []
 		}
 		es6ClassBindAll(this)
-		this.socket = socketIOClient('http://localhost:4000')
-		this.socket.on('status', data => this.updateMessages(data.message))
-
+		this.socket = socketIOClient('http://192.168.1.16:4000')
+		this.socket.on('manager', data => this.updateMyMessages(data.message))
+		this.socket.on('status', data => this.updateYourMessages(data.message))
 	}
 
-	updateMessages(message) {
+	updateMyMessages(msg) {
+		this.updateMessages("_ME_", msg)
+	}
+
+	updateYourMessages(msg) {
+		this.updateMessages("THEM", msg)
+	}
+
+	updateMessages(tag, message) {
 		this.setState((prevState) => {
-			const messages = [message, ...prevState.messages]
+			const messages = [{ tag, message, }, ...prevState.messages]
 			return { messages, }
 		})
 	}
@@ -45,8 +53,8 @@ export default class Controller extends Component {
 			<button onClick={this.submitMessage}>Submit</button>
 			<ul>
 			{
-				this.state.messages.map((msg, i) => {
-					return (<li key={i}>msg</li>) 
+				this.state.messages.map((item, i) => {
+					return (<li key={i}>[{item.tag}] : {item.message}</li>) 
 				})
 			}
 			</ul>
