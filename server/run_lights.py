@@ -21,13 +21,11 @@ lights = LightsManager()
 
 lights.start_event({ 'id': current_ID, 'status': 'running', 'mode': 'SINGLE' })
 
-shutdown_event = {'id': current_ID, 'status': 'shutdown'}
-
 print("Started Event: {0}".format({ 'id': current_ID, 'status': 'running', 'mode': 'SINGLE' }))
 
 def handle_lights(json):
     packet = pickle.loads(json['data'])
-    if packet['manager']:
+    if packet['event'] == 'manager':
     	lights.write_event(packet['data'], current_ID)
 
 if __name__ == "__main__":
@@ -43,12 +41,13 @@ if __name__ == "__main__":
             sleep(0.01)
         except KeyboardInterrupt:
             print('\nClosing...')
-            lights.write_event(shutdown_event)
+            lights.write_event({'status': 'shutdown'}, current_ID)
             break
         except Exception as e:
             print("\nClosing from error: {0}".format(e))
-            lights.write_event(shutdown_event)
+            lights.write_event({'status': 'shutdown'}, current_ID)
             break
     p.unsubscribe()
     p.close()
+    lights.close()
     print("Lights Off.")
