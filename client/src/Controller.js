@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import es6ClassBindAll from 'es6-class-bind-all'
 import socketIOClient from 'socket.io-client'
-import {Tabs, Tab} from 'react-bootstrap'
+import { Tabs, Tab } from 'react-bootstrap'
 import SingleModeForm from './SingleModeForm'
 import RainbowModeForm from './RainbowModeForm'
 
@@ -9,7 +9,7 @@ export default class Controller extends Component {
     constructor(props) {
         super(props)
         this.state = {
-        	tabKey: 'single',
+            tabKey: 'single',
             mode: 'SINGLE',
             modeParams: {},
             status: {},
@@ -36,7 +36,7 @@ export default class Controller extends Component {
     }
 
     handleTabs(tabKey) {
-    	this.setState({ tabKey, })
+        this.setState({ tabKey })
     }
 
     submitMessage(mode, params) {
@@ -56,16 +56,20 @@ export default class Controller extends Component {
     render() {
         return (
             <div className="controller">
-            	<div className="param-form">
-            	<Tabs controlId="controlled-tab-id" activeKey={this.state.key} onSelect={this.handleTabs}>
-            		<Tab eventKey="single" title="SINGLE">
-                		<SingleModeForm onSubmit={this.submitMessage} />
-                	</Tab>
-                	<Tab eventKey="rainbow" title="RAINBOW">
-                		<RainbowModeForm onSubmit={this.submitMessage} />
-                	</Tab>
-            	</Tabs>
-            	</div>
+                <div className="param-form">
+                    <Tabs
+                        controlId="controlled-tab-id"
+                        activeKey={this.state.key}
+                        onSelect={this.handleTabs}
+                    >
+                        <Tab eventKey="single" title="SINGLE">
+                            <SingleModeForm onSubmit={this.submitMessage} />
+                        </Tab>
+                        <Tab eventKey="rainbow" title="RAINBOW">
+                            <RainbowModeForm onSubmit={this.submitMessage} />
+                        </Tab>
+                    </Tabs>
+                </div>
                 <div className="item-1">
                     <h3>Your Last Request:</h3>
                     <br />

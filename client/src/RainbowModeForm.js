@@ -25,8 +25,15 @@ export default class RainbowModeForm extends Component {
         return (
             <Form className="rainbow-mode-form">
                 <Form.Group controlId="formBasicRange">
-                <Form.Label>Refresh Speed:</Form.Label>
-                <Form.Control type="range" value={this.state.wait} onChange={this.handleChange} min="0.01" max="1.0" step="0.01"/>
+                    <Form.Label>Refresh Speed:</Form.Label>
+                    <Form.Control
+                        type="range"
+                        value={this.state.wait}
+                        onChange={this.handleChange}
+                        min="0.01"
+                        max="1.0"
+                        step="0.01"
+                    />
                 </Form.Group>
                 <p>{`(${this.state.wait}ms)`}</p>
                 <Button onClick={this.handleSubmit}>Submit</Button>

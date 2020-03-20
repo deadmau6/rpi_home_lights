@@ -24,7 +24,8 @@
     padding: 10px;
     margin: 5px;
 }
-.single-mode-form, .rainbow-mode-form {
-  background-color: white;
-  color: #282c34;
+.single-mode-form,
+.rainbow-mode-form {
+    background-color: white;
+    color: #282c34;
 }

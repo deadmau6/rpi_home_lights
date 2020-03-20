@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import es6ClassBindAll from 'es6-class-bind-all'
 import { Form, Button } from 'react-bootstrap'
-import {SliderPicker, MaterialPicker } from 'react-color'
+import { SliderPicker, MaterialPicker } from 'react-color'
 
 export default class SingleModeForm extends Component {
     constructor(props) {
@@ -12,7 +12,7 @@ export default class SingleModeForm extends Component {
                 red: 0,
                 green: 0,
                 blue: 0,
-            }
+            },
         }
         es6ClassBindAll(this)
     }
@@ -35,9 +35,15 @@ export default class SingleModeForm extends Component {
         return (
             <div className="single-mode-form">
                 <br />
-                <MaterialPicker color={this.state.hex} onChangeComplete={this.handleChange}/>
+                <MaterialPicker
+                    color={this.state.hex}
+                    onChangeComplete={this.handleChange}
+                />
                 <br />
-                <SliderPicker color={this.state.hex} onChangeComplete={this.handleChange}/>
+                <SliderPicker
+                    color={this.state.hex}
+                    onChangeComplete={this.handleChange}
+                />
                 <br />
                 <Button onClick={this.handleSubmit}>Submit</Button>
             </div>
