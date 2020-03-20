@@ -1,12 +1,15 @@
 import React, { Component } from 'react'
 import es6ClassBindAll from 'es6-class-bind-all'
 import socketIOClient from 'socket.io-client'
-import ParamForm from './ParamForm'
+import {Tabs, Tab} from 'react-bootstrap'
+import SingleModeForm from './SingleModeForm'
+import RainbowModeForm from './RainbowModeForm'
 
 export default class Controller extends Component {
     constructor(props) {
         super(props)
         this.state = {
+        	tabKey: 'single',
             mode: 'SINGLE',
             modeParams: {},
             status: {},
@@ -32,13 +35,17 @@ export default class Controller extends Component {
         })
     }
 
-    submitMessage(params) {
+    handleTabs(tabKey) {
+    	this.setState({ tabKey, })
+    }
+
+    submitMessage(mode, params) {
         this.socket.emit('lights', {
             status: 'running',
-            mode: this.state.mode,
+            mode: mode,
             mode_params: params,
         })
-        this.setState({ modeParams: params })
+        this.setState({ mode: mode, modeParams: params })
     }
 
     componentWillUnmount() {
@@ -49,7 +56,16 @@ export default class Controller extends Component {
     render() {
         return (
             <div className="controller">
-                <ParamForm onSubmit={this.submitMessage} />
+            	<div className="param-form">
+            	<Tabs controlId="controlled-tab-id" activeKey={this.state.key} onSelect={this.handleTabs}>
+            		<Tab eventKey="single" title="SINGLE">
+                		<SingleModeForm onSubmit={this.submitMessage} />
+                	</Tab>
+                	<Tab eventKey="rainbow" title="RAINBOW">
+                		<RainbowModeForm onSubmit={this.submitMessage} />
+                	</Tab>
+            	</Tabs>
+            	</div>
                 <div className="item-1">
                     <h3>Your Last Request:</h3>
                     <br />
