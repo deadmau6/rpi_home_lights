@@ -1,5 +1,5 @@
 from flask_socketio import SocketIO
-from manager import Manager
+from .manager import Manager
 
 class LightsManager(Manager):
     #This socket only acts as an emmiter.

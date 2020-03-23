@@ -1,5 +1,5 @@
 from multiprocessing import freeze_support
-from manager import Manager
+from .manager import Manager
 import time
 import argparse
 
