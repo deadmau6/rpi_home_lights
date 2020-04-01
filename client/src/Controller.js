@@ -1,64 +1,102 @@
 import React, { Component } from 'react'
 import es6ClassBindAll from 'es6-class-bind-all'
 import socketIOClient from 'socket.io-client'
+import { Tabs, Tab } from 'react-bootstrap'
+import SingleModeForm from './SingleModeForm'
+import RainbowModeForm from './RainbowModeForm'
 
 export default class Controller extends Component {
-	constructor(props) {
-		super(props)
-		this.state = {
-			currentText: '',
-			messages: []
-		}
-		es6ClassBindAll(this)
-		this.socket = socketIOClient('http://192.168.1.16:4000')
-		this.socket.on('manager', data => this.updateMyMessages(data.message))
-		this.socket.on('status', data => this.updateYourMessages(data.message))
-	}
+    constructor(props) {
+        super(props)
+        this.state = {
+            tabKey: 'single',
+            mode: 'SINGLE',
+            modeParams: {},
+            status: {},
+        }
+        es6ClassBindAll(this)
+        this.socket = socketIOClient('http://192.168.1.16:4000')
+        this.socket.on('status', data => this.updateStatus(data))
+    }
 
-	updateMyMessages(msg) {
-		this.updateMessages("_ME_", msg)
-	}
+    updateStatus(data) {
+        const update = data['update'] || {}
+        const params = update['params']
+            ? Object.entries(update['params']).map(
+                  ([key, value]) => `${key}=${value} `
+              )
+            : []
+        this.setState({
+            status: {
+                status: data['status'],
+                mode: update['mode'],
+                params: params,
+            },
+        })
+    }
 
-	updateYourMessages(msg) {
-		this.updateMessages("THEM", msg)
-	}
+    handleTabs(tabKey) {
+        this.setState({ tabKey })
+    }
 
-	updateMessages(tag, message) {
-		this.setState((prevState) => {
-			const messages = [{ tag, message, }, ...prevState.messages]
-			return { messages, }
-		})
-	}
+    submitMessage(mode, params) {
+        this.socket.emit('lights', {
+            status: 'running',
+            mode: mode,
+            mode_params: params,
+        })
+        this.setState({ mode: mode, modeParams: params })
+    }
 
-	handleText(event) {
-		const currentText = event.target.value
-		this.setState({ currentText, })
-	}
+    componentWillUnmount() {
+        this.socket.close()
+        delete this.socket
+    }
 
-	submitMessage(event) {
-		event.preventDefault()
-		this.socket.emit('lights', { message: this.state.currentText })
-		this.setState({ currentText: '', })
-	}
-
-	componentWillUnmount() {
-		this.socket.close()
-		delete this.socket
-	}
-
-	render() {
-		return (
-			<div className="controller">
-			<input type="text" onChange={this.handleText}/>
-			<button onClick={this.submitMessage}>Submit</button>
-			<ul>
-			{
-				this.state.messages.map((item, i) => {
-					return (<li key={i}>[{item.tag}] : {item.message}</li>) 
-				})
-			}
-			</ul>
-			</div>
-		)
-	}
+    render() {
+        return (
+            <div className="controller">
+                <div className="param-form">
+                    <Tabs
+                        controlId="controlled-tab-id"
+                        activeKey={this.state.key}
+                        onSelect={this.handleTabs}
+                    >
+                        <Tab eventKey="single" title="SINGLE">
+                            <SingleModeForm onSubmit={this.submitMessage} />
+                        </Tab>
+                        <Tab eventKey="rainbow" title="RAINBOW">
+                            <RainbowModeForm onSubmit={this.submitMessage} />
+                        </Tab>
+                    </Tabs>
+                </div>
+                <div className="item-1">
+                    <h3>Your Last Request:</h3>
+                    <br />
+                    <p>
+                        {this.state.mode}: {'{'}
+                    </p>
+                    {Object.entries(this.state.modeParams).map(
+                        ([key, value]) => (
+                            <p>
+                                {key}: {value}
+                            </p>
+                        )
+                    )}
+                    <p>{'{'}</p>
+                </div>
+                <div className="item-2">
+                    <h3>Current Lights Status:</h3>
+                    <br />
+                    <p>{'{'}</p>
+                    {Object.entries(this.state.status).map(([key, value]) => (
+                        <p>
+                            {key}: {value}
+                        </p>
+                    ))}
+                    <p>{'{'}</p>
+                </div>
+            </div>
+        )
+    }
 }
