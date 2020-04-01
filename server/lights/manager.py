@@ -31,17 +31,9 @@ class Manager(ABC):
             readable, writable, errors = select.select(self.dispatch_pipes, self.event_pipes, self.event_pipes, 0.001)
             for conn in readable:
                 self.read_event(conn)
-        except (KeyboardInterrupt, SystemExit):
-            print('\nExiting...')
-            for pipe_fileno in self.active_pipes.keys():
-                self.close_event(pipe_fileno)
-            print('\nComplete!')
         except Exception as e:
-            print('\nExiting...')
-            print(e)
-            for pipe_fileno in self.active_pipes.keys():
-                self.close_event(pipe_fileno)
-            print('\nComplete!')
+            self.close()
+            raise e
 
     def register_event(self, conn, event_obj):
         """Registers a particular event based on the typ.
@@ -79,8 +71,9 @@ class Manager(ABC):
         try:
             update_obj = conn.recv()
         except (EOFError, OSError) as ef:
-            print("Cannot Read Event, it must've abruptly close.", ef)
             self.close_pipe(conn.fileno())
+            # TODO: Custom errors!
+            raise Exception(ef)
         else:
             self.update_event(update_obj, conn.fileno())
 
@@ -113,6 +106,12 @@ class Manager(ABC):
         self.dispatch_pipes.append(parent_conn)
         self.event_pipes.append(child_conn)
         return parent_conn, child_conn
+
+    def close(self):
+        """Safely close the entire manager and its children."""
+        active_keys = list(self.active_pipes.keys())
+        for pipe_fileno in active_keys:
+                self.close_event(pipe_fileno)
 
     def close_event(self, pipe_fileno):
         """Safely closes an event and it's pipes.
