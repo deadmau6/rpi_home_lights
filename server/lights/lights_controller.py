@@ -66,7 +66,7 @@ class LightsController:
     def _rainbow(self, wait=0.001):
         for j in range(255):
             for i in range(self.num_pixels):
-                pixel_index = (i * 256 // num_pixels) + j
+                pixel_index = (i * 256 // self.num_pixels) + j
                 self.pixels[i] = self._wheel(pixel_index & 255)
             self.pixels.show()
             sleep(wait)
