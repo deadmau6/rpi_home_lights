@@ -2,6 +2,13 @@ import board
 import neopixel
 import time
 
+class Modes:
+	"""
+	Singleton style class that keeps track of Modes and their respective parameters.
+	"""
+	SINGLE = {}
+	RAINBOW = {}
+
 class LightsController:
 	def __init__(self, request):
 		# Basic setup
@@ -19,6 +26,7 @@ class LightsController:
 		mode = request.get('mode')
 		if mode and mode in self.MODES:
 			self._mode = mode
+		# TODO: Validate Params here!
 		self._params = request.get('mode_params', {})
 
 	def run(self):
@@ -47,8 +55,8 @@ class LightsController:
 			b = int(255 - pos*3)
 		return (r, g, b) if self.ORDER == neopixel.RGB or self.ORDER == neopixel.GRB else (r, g, b, 0)
 
-	def _single(self, color=(255, 0, 0)):
-		self.pixels.fill(color)
+	def _single(self, red=0, green=0, blue=0):
+		self.pixels.fill((red, green, blue))
 
 	def _rainbow(self, wait=0.001):
 		for j in range(255):
