@@ -27,7 +27,9 @@ class LightsController:
 		if mode and mode in self.MODES:
 			self._mode = mode
 		# TODO: Validate Params here!
-		self._params = request.get('mode_params', {})
+		mode_params = request.get('mode_params')
+		if mode_params:
+			self._params = mode_params
 
 	def run(self):
 		if self._mode == 'RAINBOW':
