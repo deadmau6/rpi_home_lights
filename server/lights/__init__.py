@@ -1,1 +1,1 @@
-from .lights_manager import LightManager
+from .lights_manager import LightsManager

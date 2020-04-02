@@ -1,4 +1,4 @@
-from mode_validators import ModeValidators
+from .mode_validators import ModeValidators
 from time import sleep
 import board
 import neopixel

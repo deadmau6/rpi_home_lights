@@ -1,5 +1,5 @@
 from multiprocessing import freeze_support
-from lights_manager import LightsManager
+from lights import LightsManager
 from time import sleep
 import random
 import redis
