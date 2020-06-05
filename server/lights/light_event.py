@@ -39,5 +39,5 @@ class LightEvent(BaseEvent, Process):
                     update_obj = self.lights.update(request)
                     self.log(update_obj)
             self.lights.run()
-            sleep(1)
+            sleep(0.001)
 
