@@ -1,6 +1,6 @@
 from multiprocessing import Process
 from .base_event import BaseEvent
-from .lights_controller import LightsController
+from ..modes import LightModes
 from time import sleep
 
 class LightEvent(BaseEvent, Process):
@@ -9,7 +9,7 @@ class LightEvent(BaseEvent, Process):
         BaseEvent.__init__(self, event_conn)
         Process.__init__(self)
         self.event_id = event_obj['id']
-        self.lights = LightsController(event_obj)
+        self.lights = LightModes(event_obj)
 
     def log(self, update, status="OK"):
         self.report({

@@ -8,8 +8,8 @@ class LightModes:
     }
 
     def __init__(self, request):
-        self.current_mode = 'SINGLE'
-        self.params = None
+        self.current_mode = request.get('mode', 'SINGLE')
+        self.params = request.get('mode_params', {})
 
     @property
     def current_mode(self):
