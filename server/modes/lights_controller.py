@@ -1,4 +1,6 @@
 from abc import abstractmethod
+import board
+import neopixel
 
 class LightsController:
     def __init__(self):
