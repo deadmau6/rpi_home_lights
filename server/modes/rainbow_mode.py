@@ -1,5 +1,6 @@
 from .lights_controller import LightsController
 from cerberus import Validator
+from time import sleep
 
 class RainbowMode(LightsController):
 
