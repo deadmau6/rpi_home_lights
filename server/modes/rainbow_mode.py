@@ -1,4 +1,5 @@
 from .lights_controller import LightsController
+from cerberus import Validator
 
 class RainbowMode(LightsController):
 
