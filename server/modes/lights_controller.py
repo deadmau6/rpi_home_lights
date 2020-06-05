@@ -8,7 +8,7 @@ class LightsController:
         self.pixel_pin = board.D18
         self.num_pixels = 60
         self.ORDER = neopixel.GRB
-        self.pixels = neopixel.NeoPixel(self.pixel_pin, self.num_pixels, brightness=0.2, auto_write=False, pixel_order=self.ORDER)
+        self.pixels = neopixel.NeoPixel(self.pixel_pin, self.num_pixels, brightness=0.5, auto_write=False, pixel_order=self.ORDER)
 
     @abstractmethod
     def process(self):

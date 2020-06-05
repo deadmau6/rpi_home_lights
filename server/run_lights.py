@@ -19,7 +19,12 @@ current_ID = random.randint(0, 10000)
 
 lights = LightsManager()
 
-lights.start_event({ 'id': current_ID, 'status': 'running', 'mode': 'SINGLE' })
+lights.start_event({
+    'id': current_ID,
+    'status': 'running',
+    'mode': 'SINGLE',
+    'mode_params': { 'red': 255, 'blue': 0, 'green': 0}
+})
 
 print("Started Event: {0}".format({ 'id': current_ID, 'status': 'running', 'mode': 'SINGLE' }))
 
