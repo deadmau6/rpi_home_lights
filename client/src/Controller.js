@@ -4,6 +4,7 @@ import socketIOClient from 'socket.io-client'
 import { Tabs, Tab } from 'react-bootstrap'
 import SingleModeForm from './SingleModeForm'
 import RainbowModeForm from './RainbowModeForm'
+import FadeModeForm from './FadeModeForm'
 
 export default class Controller extends Component {
     constructor(props) {
@@ -67,6 +68,9 @@ export default class Controller extends Component {
                         </Tab>
                         <Tab eventKey="rainbow" title="RAINBOW">
                             <RainbowModeForm onSubmit={this.submitMessage} />
+                        </Tab>
+                        <Tab eventKey="fade" title="FADE">
+                            <FadeModeForm onSubmit={this.submitMessage} />
                         </Tab>
                     </Tabs>
                 </div>
