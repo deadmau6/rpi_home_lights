@@ -45,7 +45,7 @@ class FadeMode(LightsController):
     def colors(self):
         return getattr(self, '_colors', [[255,0,0], [0,255,0], [0,0,255]])
 
-    @setter.colors
+    @colors.setter
     def colors(self, colors):
         if isinstance(colors, list):
             # maybe check r + g + b >= 255
