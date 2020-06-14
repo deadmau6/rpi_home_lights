@@ -1,10 +1,12 @@
 from .single_mode import SingleMode
 from .rainbow_mode import RainbowMode
+from .fade_mode import FadeMode
 
 class LightModes:
     _MODES = {
         'SINGLE': SingleMode(),
-        'RAINBOW': RainbowMode()
+        'RAINBOW': RainbowMode(),
+        'FADE': FadeMode(),
     }
 
     def __init__(self, request):
