@@ -6,7 +6,7 @@ from time import sleep
 class FadeMode(LightsController):
     _validator = Validator({
             'cycle': {
-                'type': 'bool',
+                'type': 'boolean',
                 'coerce': Utils.string_to_bool
             },
             'num_of_colors': {
