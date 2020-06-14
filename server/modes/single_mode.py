@@ -1,7 +1,9 @@
+from .lights_controller import LightsController
 from cerberus import Validator
 
-class ModeValidators:
-    SINGLE = Validator({
+class SingleMode(LightsController):
+
+    _validator = Validator({
             'red': {
                 'type': 'integer',
                 'coerce': int,
@@ -21,11 +23,7 @@ class ModeValidators:
                 'max': 255,
             }
         })
-    RAINBOW = Validator({
-            'wait': {
-                'type': 'float',
-                'coerce': float,
-                'min': 0.001,
-                'max': 1.0,
-            }
-        })
+
+    def process(self, red=0, green=0, blue=0):
+        self.pixels.fill((red, green, blue))
+        self.pixels.show()

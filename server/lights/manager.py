@@ -1,6 +1,6 @@
 from multiprocessing import Process, Pipe
 from abc import ABC, abstractmethod
-from light_event import LightEvent
+from .light_event import LightEvent
 import select, json, time
 
 class Manager(ABC):

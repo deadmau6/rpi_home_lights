@@ -15,7 +15,7 @@ export default class Controller extends Component {
             status: {},
         }
         es6ClassBindAll(this)
-        this.socket = socketIOClient('http://192.168.1.16:4000')
+        this.socket = socketIOClient('http://192.168.1.11:4000')
         this.socket.on('status', data => this.updateStatus(data))
     }
 

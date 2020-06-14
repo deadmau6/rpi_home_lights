@@ -1,5 +1,5 @@
 from multiprocessing import freeze_support
-from lights_manager import LightsManager
+from .lights import LightsManager
 from time import sleep
 import random
 import redis
@@ -19,7 +19,12 @@ current_ID = random.randint(0, 10000)
 
 lights = LightsManager()
 
-lights.start_event({ 'id': current_ID, 'status': 'running', 'mode': 'SINGLE' })
+lights.start_event({
+    'id': current_ID,
+    'status': 'running',
+    'mode': 'SINGLE',
+    'mode_params': { 'red': 255, 'blue': 0, 'green': 0}
+})
 
 print("Started Event: {0}".format({ 'id': current_ID, 'status': 'running', 'mode': 'SINGLE' }))
 
@@ -28,7 +33,8 @@ def handle_lights(json):
     if packet['event'] == 'manager':
         lights.write_event(packet['data'], current_ID)
 
-if __name__ == "__main__":
+#if __name__ == "__main__":
+if True:
     freeze_support()
     r = redis.Redis(host='localhost', port=6379, db=0)
     p = r.pubsub()
