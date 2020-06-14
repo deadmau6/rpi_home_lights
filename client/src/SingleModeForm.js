@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import es6ClassBindAll from 'es6-class-bind-all'
-import { Form, Button } from 'react-bootstrap'
+import { Button } from 'react-bootstrap'
 import { SliderPicker, MaterialPicker } from 'react-color'
 
 export default class SingleModeForm extends Component {

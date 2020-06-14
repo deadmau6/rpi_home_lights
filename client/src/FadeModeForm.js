@@ -8,7 +8,7 @@ export default class FadeModeForm extends Component {
         super(props)
         this.state = {
             hex: '#333',
-            cycle: true,
+            cycle: false,
             num_of_colors: 3,
             steps: 3,
             red: 0,
@@ -21,7 +21,12 @@ export default class FadeModeForm extends Component {
     handleChange(event) {
         const key = event.target.id
         const value = event.target.value
+        console.log(key, value)
         this.setState({ [key]: value })
+    }
+
+    handleCycle() {
+        this.setState(prev => { return { cycle: !prev.cycle }})
     }
 
     handleColor(color) {
@@ -31,6 +36,7 @@ export default class FadeModeForm extends Component {
 
     handleSubmit(e) {
         e.preventDefault()
+        console.log(this.state)
         this.props.onSubmit('FADE', {
             cycle: this.state.cycle,
             num_of_colors: this.state.num_of_colors,
@@ -44,16 +50,15 @@ export default class FadeModeForm extends Component {
     render() {
         return (
             <Form className="fade-mode-form">
-                <Form.Group controlId="formCycle">
+                <Form.Group>
                     <Form.Check
                         type='checkbox'
                         id='cycle'
                         label='Cycle'
-                        value={!this.state.cycle}
-                        onSelect={this.handleChange}
+                        onChange={this.handleCycle}
                     />
                 </Form.Group>
-                <Form.Group controlId="formNumColors">
+                <Form.Group>
                     <Form.Label>Colors:</Form.Label>
                     <Form.Control
                         id='num_of_colors'
@@ -61,7 +66,7 @@ export default class FadeModeForm extends Component {
                         onChange={this.handleChange}
                     />
                 </Form.Group>
-                <Form.Group controlId="formSteps">
+                <Form.Group>
                     <Form.Label>Steps:</Form.Label>
                     <Form.Control
                         id='steps'
