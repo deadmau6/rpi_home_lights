@@ -3,7 +3,7 @@ class Utils:
 
     @staticmethod
     def string_to_bool(s):
-        return s == 'True' or s =='true'
+        return s.lower() in ('true', '1')
 
     @staticmethod
     def rgb_prime(h, c, x):

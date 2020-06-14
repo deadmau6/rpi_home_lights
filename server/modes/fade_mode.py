@@ -7,7 +7,7 @@ class FadeMode(LightsController):
     _validator = Validator({
             'cycle': {
                 'type': 'boolean',
-                'coerce': Utils.string_to_bool
+                'coerce': (str, Utils.string_to_bool)
             },
             'num_of_colors': {
                 'type': 'integer',
@@ -66,14 +66,14 @@ class FadeMode(LightsController):
         # fade in
         for i in range(0, steps):
             current_color = [(current_color[i] + step_size[i]) % 255 for i in range(3)]
-            self.pixels.fill(current_color)
+            self.pixels.fill(tuple(current_color))
             self.pixels.show()
             sleep(1 / steps)
         # fade out
         for i in range(0, steps):
             current_color = [abs(current_color[i] - step_size[i]) % 255 for i in range(3)]
-            self.pixels.fill(current_color)
+            self.pixels.fill(tuple(current_color))
             self.pixels.show()
             sleep(1 / steps)
 
-        self._current_index = self._current_index + 1 % len(self.colors)
+        self._current_index = (self._current_index + 1) % len(self.colors)
