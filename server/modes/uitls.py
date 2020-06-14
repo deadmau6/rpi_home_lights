@@ -26,4 +26,4 @@ class Utils:
         x = c * (1 - abs(h/60 % 2 - 1))
         m = v - c
         r, g, b = Utils.rgb_prime(h, c, x)
-        return (int((r + m) * 255), int((g + m) * 255), int((b + m) * 255))
+        return [int((r + m) * 255), int((g + m) * 255), int((b + m) * 255)]

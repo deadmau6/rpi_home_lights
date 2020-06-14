@@ -55,11 +55,11 @@ class FadeMode(LightsController):
             self._colors = [Utils.hsv_to_rgb(i, 1, 1) for i in range(0, 360, int(360/colors))]
 
     def process(self, cycle=True, num_of_colors=3, steps=3, red=0, green=0, blue=0):
-        if cycle and len(self.colors) != num_of_colors:
-            self.colors = num_of_colors
-        else:
+        if not cycle:
             # maybe check r + g + b >= 255
-            self.colors = [red, green, blue]
+            self.colors = [[red, green, blue]]
+        elif len(self.colors) != num_of_colors:
+            self.colors = num_of_colors
 
         step_size = [int(x / steps) for x in self.colors[self._current_index]]
         current_color = [0, 0, 0]
